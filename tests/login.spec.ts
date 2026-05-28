@@ -1,5 +1,6 @@
 import {Page,expect, test} from '@playwright/test';
 
+//This test verifies that a user with valid credentials is successfully redirected to the inventory page after login. It confirms the expected URL and that the product list is visible.
 test('001 - Login success', async ({page}) => {
     await page.goto(`https://www.saucedemo.com/`);
     await page.locator("#user-name").fill('standard_user');
@@ -9,3 +10,32 @@ test('001 - Login success', async ({page}) => {
     await expect(page.locator(".inventory_list")).toBeVisible()
 })
 
+/*TC02 — Login fails with wrong password
+Objective: Verify system shows error when password is incorrect
+Precondition: Browser opened, navigate to https://www.saucedemo.com
+Input:
+Username: standard_user
+Password: wrong_password
+Steps:
+Fill username field
+Fill password field with wrong password
+Click Login button
+Expected Result:
+Stay on login page (URL does not change)
+Error message appears: "Epic sadface: Username and password do not match any user in this service"
+AC (must all pass):
+ page.url() does NOT contain /inventory
+ Element [data-test="error"] is visible
+ Error text matches exactly or contains the expected message*/
+
+
+ test('TC02 — Login fails with wrong password', async ({page}) => {
+    await page.goto(`https://www.saucedemo.com`)
+    await page.locator("#user-name").fill('standard_user')
+    await page.locator("#password").fill('wrong_password');
+    await page.locator("#login-button").click()
+    const errorMessage = page.locator("[data-test='error']")
+    await expect (errorMessage).toBeVisible()
+    await expect(errorMessage).toHaveText("Epic sadface: Username and password do not match any user in this service")   
+    await expect(page).not.toHaveURL('/inventory')
+ })
