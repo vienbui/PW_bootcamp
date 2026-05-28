@@ -55,5 +55,13 @@ test('001 - Login success', async ({page}) => {
     await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html")
     await expect(page.locator(".inventory_list")).toBeVisible()
     await page.locator("#react-burger-menu-btn").click()
+    await page.locator("#logout_sidebar_link").click()
+    await expect(page).toHaveURL('https://www.saucedemo.com/')
+    await expect(page.locator("#user-name")).toBeVisible()
+
+    await page.goto(`https://www.saucedemo.com/inventory.html`);
+    await expect(page).not.toHaveURL('/inventory')
     
+
+
  })
