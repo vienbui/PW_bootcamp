@@ -1,6 +1,32 @@
 import {Page,expect, test} from '@playwright/test';
 
 //This test verifies that a user with valid credentials is successfully redirected to the inventory page after login. It confirms the expected URL and that the product list is visible.
+/* TC01 — Login successfully with valid credentials
+Objective: Verify standard user can log in and land on the product page
+Precondition: Browser opened, navigate to https://www.saucedemo.com
+Input:
+
+Username: standard_user
+Password: secret_sauce
+
+Steps:
+
+Fill username field
+Fill password field
+Click Login button
+
+Expected Result:
+
+URL changes to https://www.saucedemo.com/inventory.html
+Page title "Swag Labs" is visible
+Product list is visible (at least 1 product shown)
+
+AC (must all pass):
+
+ page.url() contains /inventory
+ Element .inventory_list is visible
+ No error message visible*/
+ 
 test('001 - Login success', async ({page}) => {
     await page.goto(`https://www.saucedemo.com/`);
     await page.locator("#user-name").fill('standard_user');
@@ -28,6 +54,7 @@ AC (must all pass):
  Element [data-test="error"] is visible
  Error text matches exactly or contains the expected message*/
 
+//"This test verifies that a user with an incorrect password cannot log in, remains on the login page, and sees a specific error message."
 
  test('TC02 — Login fails with wrong password', async ({page}) => {
     await page.goto(`https://www.saucedemo.com`)
