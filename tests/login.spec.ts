@@ -20,7 +20,7 @@ test ("TC02 — Login fails with wrong password", async ({page}) => {
     await page.locator('#password').fill('wrong_password');
     await page.locator('#login-button').click();
 
-    await expect(page).not.toHaveURL("/inventory.html")
+    await expect(page).not.toHaveURL("https://www.saucedemo.com/inventory.html")
 
     const error_message = page.locator('[data-test="error"]')
     await expect (error_message).toBeVisible()
@@ -33,7 +33,7 @@ test ("TC03 — Login fails with empty fields", async ({page}) => {
     await page.goto('https://www.saucedemo.com');
     await page.locator('#login-button').click();
 
-    await expect(page).not.toHaveURL("/inventory.html")
+    await expect(page).not.toHaveURL("https://www.saucedemo.com/inventory.html")
 
     const error_message = page.locator('[data-test="error"]')
     await expect (error_message).toBeVisible()
