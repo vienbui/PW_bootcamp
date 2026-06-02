@@ -1,40 +1,50 @@
-import {Page} from '@playwright/test'
-
-export class LoginPage {
+import { Page, Locator } from '@playwright/test';
+export class LoginPage{
     private page:Page;
-     private usernameInput = '#user-name'
-    private passwordInput = '#password'
-    private loginButton = '#login-button'
-    private errorMessage = '[data-test="error"]'
-
+    private userName: Locator
+    private password: Locator
+    private loginBtn: Locator
+    private errorMsg: Locator
+    
     constructor (page:Page){
-        this.page = page;
+        this.page = page
+
+        this.userName = page.locator("#user-name")
+        this.password = page.locator("#password")
+        this.loginBtn = page.locator("#login-button")
+        this.errorMsg = page.locator('[data-test="error"]')
     }
 
-async gotoLoginPage(){
-     await this.page.goto("https://www.saucedemo.com")
-}
-async inputUserName(username: string){
-    await this.page.locator(this.usernameInput).fill(username) 
-}
+    async navigateToLoginPage(){
+        await this.page.goto("https://www.saucedemo.com")
+    }
 
-async inputPassword(password: string){
-    await this.page.locator(this.passwordInput).fill(password)
-}
+    getUserNameField(){
+        return this.userName
+    }
 
-async clickLoginButton(){
-    await this.page.locator(this.loginButton).click()
-}
+    async inputUserName(userName:string){
+        await this.userName.fill(userName)
+    }
 
-async login ( username: string, password: string){
-    await this.inputUserName(username)
-    await this.inputPassword(password)
-    await this.clickLoginButton()
-}
+    async inputPassword(pwd:string){
+        await this.password.fill(pwd)
+    }
+   
+     async clickLoginBtn(){
+        await this.loginBtn.click()
+    }
 
-getErrorMessage(){
-    return this.page.locator(this.errorMessage)
+     async login(userName:string,pwd:string ){
+        await this.inputUserName(userName)
+        await this.inputPassword(pwd)
+        await this.clickLoginBtn()
+    }
+    async loginWithEmptyUserNameAndPassword(){
+        await this.clickLoginBtn()
+    }
 
+    getErrorMsg(){
+        return this.errorMsg
+    }
 }
-}
-

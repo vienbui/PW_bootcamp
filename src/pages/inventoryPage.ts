@@ -1,25 +1,44 @@
-import {Page} from '@playwright/test'
+import { Page, Locator } from '@playwright/test';
 
 export class InventoryPage {
-    private page:Page;
-     private firstAddBtn = '.inventory_item:first-child button'
-    private cardBadge = '.shopping_cart_badge'
-   
+    private page:Page
+    private firstAddButton: Locator;
+    private itemList: Locator;
+    private cartIcon: Locator;
+    private appLogo: Locator;
 
-    constructor (page:Page){
+    constructor(page: Page) {
         this.page = page;
-    }
 
-    async addFirstItemToCart(){
-        await this.page.locator(this.firstAddBtn).click()
-    }
+        this.firstAddButton = this.page.locator(".inventory_item:first-child button")
+        this.itemList = this.page.locator(".inventory_list")
+        this.cartIcon = this.page.locator(".shopping_cart_badge")
+        this.appLogo = this.page.locator(".app_logo")
 
-    getCartBadge(){
-        return this.page.locator(this.cardBadge)
     }
     
-    getFirstItemButton(){
-       return this.page.locator(this.firstAddBtn)
+    async navigateToInventoryPage(){
+        await this.page.goto("https://www.saucedemo.com/inventory.html")
     }
-}
 
+    getAppLogoInventory(){
+        return this.appLogo
+    }
+
+    getItemListAppear(){
+        return this.itemList
+    }
+
+    async addFirstItem(){
+        await this.firstAddButton.click()
+    }
+
+    getFirstAddButtonStatus(){
+        return this.firstAddButton
+    }
+
+    getCardIcon(){
+        return this.cartIcon
+    }
+ 
+}
