@@ -28,8 +28,8 @@ test.describe("Login feature", () => {
 
          await expect(page).not.toHaveURL("/inventory")
         
-         await expect(loginPage.getErrorMsgExit()).toBeVisible()
-         await expect(loginPage.getErrorMsgExit()).toHaveText("Epic sadface: Username and password do not match any user in this service")
+         await expect(loginPage.getErrorMsg()).toBeVisible()
+         await expect(loginPage.getErrorMsg()).toHaveText("Epic sadface: Username and password do not match any user in this service")
     })
 
     test ('TC03 — Login fails with empty fields', async ({page}) => {
@@ -37,8 +37,8 @@ test.describe("Login feature", () => {
 
          await expect(page).not.toHaveURL("/inventory")
         
-         await expect(loginPage.getErrorMsgExit()).toBeVisible()
-         await expect(loginPage.getErrorMsgExit()).toContainText("Username is required")
+         await expect(loginPage.getErrorMsg()).toBeVisible()
+         await expect(loginPage.getErrorMsg()).toContainText("Username is required")
 
      })    
 
