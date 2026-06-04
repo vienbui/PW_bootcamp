@@ -1,46 +1,33 @@
-import {test, expect} from '@playwright/test'
-import {LoginPage} from '../src/pages/loginPage'
-import { InventoryPage } from '../src/pages/inventoryPage'
-import {MenuPage} from '../src/pages/menuPage'
+import {test, expect} from '../src/fixtures/index'
 
 
 test.describe('Login feature', () => {
-    let loginPage:LoginPage
-    let inventoryPage: InventoryPage
-    let menuPage:MenuPage
+   
 
-    test.beforeEach("login", async ({page}) => {
-        loginPage = new LoginPage(page)
-        inventoryPage = new InventoryPage (page)
-        menuPage = new MenuPage(page)
-
-        await loginPage.navigateToLoginPage()
-    })
-
-    test("TC01 — Login successfully with valid credentials", async({page}) => {
+    test("TC01 — Login successfully with valid credentials", async({page,loginPage,inventoryPage }) => {
         await loginPage.login("standard_user", "secret_sauce")
 
-        await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).toHaveURL('/inventory.html')
         await expect(inventoryPage.getLogo()).toBeVisible()
         await expect(inventoryPage.getItemList()).toBeVisible()
     })
 
-    test("TC02 — Login fails with wrong password", async({page}) => {
+    test("TC02 — Login fails with wrong password", async({page,loginPage}) => {
         await loginPage.login("standard_user", "wrong_password")
 
-        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).not.toHaveURL('/inventory.html')
         await expect(loginPage.getErrorMsg()).toBeVisible()
         await expect(loginPage.getErrorMsg()).toHaveText("Epic sadface: Username and password do not match any user in this service")
     })
 
-    test("TC03 — Login fails with empty fields", async({page}) => {
+    test("TC03 — Login fails with empty fields", async({page, loginPage}) => {
         await loginPage.loginWithoutInput()
 
-        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).not.toHaveURL('/inventory.html')
         await expect(loginPage.getErrorMsg()).toBeVisible()
         await expect(loginPage.getErrorMsg()).toContainText("Username is required")
     })
-     test("TC04 — Add a product to cart", async({page}) => {
+     test("TC04 — Add a product to cart", async({loginPage,inventoryPage }) => {
         await loginPage.login("standard_user", "secret_sauce")
 
         await inventoryPage.clickFirstAddButton()
@@ -49,21 +36,21 @@ test.describe('Login feature', () => {
         await expect(inventoryPage.getCardIcon()).toContainText("1")
 
     })
-    test("TC05 — Logout successfully", async({page}) => {
+    test("TC05 — Logout successfully", async({page,loginPage, inventoryPage, menuPage}) => {
         await loginPage.login("standard_user", "secret_sauce")
 
         await menuPage.logout()
 
-        await expect(page).toHaveURL('https://www.saucedemo.com')
+        await expect(page).toHaveURL('/')
         await expect(loginPage.getUserNameElement()).toBeVisible()
         await inventoryPage.navigateToInventoryPage()
-        await expect(page).toHaveURL('https://www.saucedemo.com')
+        await expect(page).toHaveURL('/')
 
 
     })
 
-     
-})
+})    
+
 
 /* 
 TC02 — Login fails with wrong password
