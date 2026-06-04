@@ -1,44 +1,42 @@
-import { Page, Locator } from '@playwright/test';
-
+import {Page, Locator} from '@playwright/test'
 export class InventoryPage {
     private page:Page
-    private firstAddButton: Locator;
-    private itemList: Locator;
-    private cartIcon: Locator;
-    private appLogo: Locator;
+    private logo: Locator
+    private itemList: Locator
+    private firstAddButton: Locator
+    private cartIcon: Locator
 
-    constructor(page: Page) {
-        this.page = page;
-
-        this.firstAddButton = this.page.locator(".inventory_item:first-child button")
-        this.itemList = this.page.locator(".inventory_list")
-        this.cartIcon = this.page.locator(".shopping_cart_badge")
-        this.appLogo = this.page.locator(".app_logo")
+    constructor(page:Page) {
+        this.page = page
+        this.logo = page.locator('.app_logo')
+        this.itemList = page.locator('.inventory_list')
+        this.firstAddButton = page.locator('.inventory_item:first-child button')
+        this.cartIcon = page.locator('.shopping_cart_badge')
 
     }
-    
+
     async navigateToInventoryPage(){
-        await this.page.goto("https://www.saucedemo.com/inventory.html")
+        await this.page.goto('https://www.saucedemo.com/inventory.html')
     }
 
-    getAppLogoInventory(){
-        return this.appLogo
+    getLogo(){
+        return this.logo
     }
 
-    getItemListAppear(){
+     getItemList(){
         return this.itemList
     }
 
-    async addFirstItem(){
+    async clickFirstAddButton(){
         await this.firstAddButton.click()
     }
 
-    getFirstAddButtonStatus(){
+    getFirstAddButton(){
         return this.firstAddButton
     }
 
-    getCardIcon(){
+     getCardIcon(){
         return this.cartIcon
     }
- 
+
 }

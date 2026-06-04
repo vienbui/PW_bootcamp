@@ -1,21 +1,19 @@
-import {Page,Locator} from '@playwright/test'
+import {Page, Locator} from '@playwright/test'
 
 export class MenuPage {
-    private page: Page
+    private page:Page
+    private hamburgerMenu: Locator
+    private logoutLink: Locator
 
-    private hambugerMenu: Locator
-    private logoutBtn: Locator
-
-    constructor(page:Page){
+    constructor(page:Page) {
         this.page = page
 
-        this.hambugerMenu = page.locator("#react-burger-menu-btn")
-        this.logoutBtn = page.locator("#logout_sidebar_link")
-    }
+        this.hamburgerMenu = page.locator('#react-burger-menu-btn')
+        this.logoutLink = page.locator("#logout_sidebar_link")
 
-    async logout(){
-        await this.hambugerMenu.click()
-        await this.logoutBtn.click()
     }
-
+     async logout(){
+        await this.hamburgerMenu.click()
+        await this.logoutLink.click()
+    }
 }

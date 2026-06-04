@@ -3,68 +3,66 @@ import {LoginPage} from '../src/pages/loginPage'
 import { InventoryPage } from '../src/pages/inventoryPage'
 import {MenuPage} from '../src/pages/menuPage'
 
-test.describe("Login feature", () => {
-    let loginPage: LoginPage
-    let inventoryPage:InventoryPage
-    let menuPage: MenuPage
 
-    test.beforeEach ("Login", async ({page}) => {
-        loginPage = new LoginPage (page)
-        inventoryPage = new InventoryPage(page)
+test.describe('Login feature', () => {
+    let loginPage:LoginPage
+    let inventoryPage: InventoryPage
+    let menuPage:MenuPage
+
+    test.beforeEach("login", async ({page}) => {
+        loginPage = new LoginPage(page)
+        inventoryPage = new InventoryPage (page)
         menuPage = new MenuPage(page)
 
         await loginPage.navigateToLoginPage()
-        })
-    test ('TC01 — Login successfully with valid credentials', async ({page}) => {
-        await loginPage.login("standard_user", "secret_sauce")
-
-         await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html")
-        await expect(inventoryPage.getAppLogoInventory()).toBeVisible()
-        await expect(inventoryPage.getItemListAppear()).toBeVisible()
     })
 
-     test ('TC02 — Login fails with wrong password', async ({page}) => {
-        await loginPage.login("standard_user", "wrong_password")
-
-         await expect(page).not.toHaveURL("/inventory")
-        
-         await expect(loginPage.getErrorMsg()).toBeVisible()
-         await expect(loginPage.getErrorMsg()).toHaveText("Epic sadface: Username and password do not match any user in this service")
-    })
-
-    test ('TC03 — Login fails with empty fields', async ({page}) => {
-        await loginPage.loginWithEmptyUserNameAndPassword()
-
-         await expect(page).not.toHaveURL("/inventory")
-        
-         await expect(loginPage.getErrorMsg()).toBeVisible()
-         await expect(loginPage.getErrorMsg()).toContainText("Username is required")
-
-     })    
-
-     test ('TC04 — Add a product to cart', async ({page}) => {
+    test("TC01 — Login successfully with valid credentials", async({page}) => {
         await loginPage.login("standard_user", "secret_sauce")
 
-        await inventoryPage.addFirstItem()
-        await expect(inventoryPage.getFirstAddButtonStatus()).toHaveText("Remove")
-        
+        await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(inventoryPage.getLogo()).toBeVisible()
+        await expect(inventoryPage.getItemList()).toBeVisible()
+    })
 
+    test("TC02 — Login fails with wrong password", async({page}) => {
+        loginPage.login("standard_user", "wrong_password")
+
+        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(loginPage.getErrorMsg()).toBeVisible()
+        await expect(loginPage.getErrorMsg()).toHaveText("Epic sadface: Username and password do not match any user in this service")
+    })
+
+    test("TC03 — Login fails with empty fields", async({page}) => {
+        loginPage.loginWithoutInput()
+
+        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(loginPage.getErrorMsg()).toBeVisible()
+        await expect(loginPage.getErrorMsg()).toContainText("Username is required")
+    })
+     test("TC04 — Add a product to cart", async({page}) => {
+        loginPage.login("standard_user", "secret_sauce")
+
+        await inventoryPage.clickFirstAddButton()
+        await expect(inventoryPage.getFirstAddButton()).toContainText("Remove")
         await expect(inventoryPage.getCardIcon()).toBeVisible()
         await expect(inventoryPage.getCardIcon()).toContainText("1")
-        
-    })
 
-    test ('TC05 — Logout successfully', async ({page}) => {
-        await loginPage.login("standard_user", "secret_sauce")
+    })
+    test("TC05 — Logout successfully", async({page}) => {
+        loginPage.login("standard_user", "secret_sauce")
 
         await menuPage.logout()
 
+        await expect(page).toHaveURL('https://www.saucedemo.com')
+        await expect(loginPage.getUserNameElement()).toBeVisible()
         await inventoryPage.navigateToInventoryPage()
-        await expect(loginPage.getUserNameField()).toBeVisible()
-        await expect(page).toHaveURL("https://www.saucedemo.com")
-        
+        await expect(page).toHaveURL('https://www.saucedemo.com')
+
+
     })
 
+     
 })
 
 /* 
