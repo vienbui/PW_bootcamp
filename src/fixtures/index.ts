@@ -1,30 +1,39 @@
 import {test as base} from '@playwright/test'
 import { LoginPage } from '../pages/loginPage'
 import { InventoryPage } from '../pages/inventoryPage'
-import {MenuPage} from '../pages/menuPage'
+import { MenuPage } from '../pages/menuPage'
 
-type MyFixtures ={
-    loginPage: LoginPage
-    inventoryPage: InventoryPage
-    menuPage : MenuPage
+type MyFixtures = {
+    loginPage:LoginPage
+    inventoryPage:InventoryPage
+    loggedInInventoryPage: InventoryPage
+    menuPage:MenuPage
 }
 
 export const test = base.extend<MyFixtures>({
-    loginPage: async ({ page }, use) => {
+    loginPage: async ({page}, use) => {
         const loginPage = new LoginPage(page)
         await loginPage.navigateToLoginPage()
-        await use(loginPage) 
+        await use(loginPage)
     },
 
-     inventoryPage: async ({ page }, use) => {
+    inventoryPage: async ({page}, use) => {
         const inventoryPage = new InventoryPage(page)
-        await use(inventoryPage) 
+        await use(inventoryPage)
     },
-    menuPage: async ({ page }, use) => {
+
+    loggedInInventoryPage: async ({page, loginPage, inventoryPage}, use) => {
+        await loginPage.navigateToLoginPage()
+        await loginPage.login("standard_user", "secret_sauce")
+
+        await use(inventoryPage)
+    },
+
+    menuPage: async ({page}, use) => {
         const menuPage = new MenuPage(page)
-        await use(menuPage) 
-    }
+        await use(menuPage)
+    },
 
 })
 
-export { expect } from '@playwright/test'
+export {expect} from '@playwright/test'

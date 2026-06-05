@@ -20,7 +20,7 @@ test.describe('Login feature', () => {
     test("TC01 — Login successfully with valid credentials", async({page}) => {
         await loginPage.login("standard_user", "secret_sauce")
 
-        await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).toHaveURL('/inventory.html')
         await expect(inventoryPage.getLogo()).toBeVisible()
         await expect(inventoryPage.getItemList()).toBeVisible()
     })
@@ -28,7 +28,7 @@ test.describe('Login feature', () => {
     test("TC02 — Login fails with wrong password", async({page}) => {
         await loginPage.login("standard_user", "wrong_password")
 
-        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).not.toHaveURL('/inventory.html')
         await expect(loginPage.getErrorMsg()).toBeVisible()
         await expect(loginPage.getErrorMsg()).toHaveText("Epic sadface: Username and password do not match any user in this service")
     })
@@ -36,11 +36,11 @@ test.describe('Login feature', () => {
     test("TC03 — Login fails with empty fields", async({page}) => {
         await loginPage.loginWithoutInput()
 
-        await expect(page).not.toHaveURL('https://www.saucedemo.com/inventory.html')
+        await expect(page).not.toHaveURL('/inventory.html')
         await expect(loginPage.getErrorMsg()).toBeVisible()
         await expect(loginPage.getErrorMsg()).toContainText("Username is required")
     })
-     test("TC04 — Add a product to cart", async({page}) => {
+     test("TC04 — Add a product to cart", async({}) => {
         await loginPage.login("standard_user", "secret_sauce")
 
         await inventoryPage.clickFirstAddButton()
@@ -54,10 +54,10 @@ test.describe('Login feature', () => {
 
         await menuPage.logout()
 
-        await expect(page).toHaveURL('https://www.saucedemo.com')
+        await expect(page).toHaveURL('/')
         await expect(loginPage.getUserNameElement()).toBeVisible()
         await inventoryPage.navigateToInventoryPage()
-        await expect(page).toHaveURL('https://www.saucedemo.com')
+        await expect(page).toHaveURL('/')
 
 
     })
